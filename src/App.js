@@ -1,11 +1,6 @@
-// REACT_APP_NEWS_API1 = "28ab0a2bdd0a4e3898e9990bd452abe7"
-// REACT_APP_NEWS_API2 = "1ffa4e9680364c4bb45d0f5415e96e3f"
-// REACT_APP_NEWS_API3 = "9b493091d4294f5791343904415ecd9a"
-
 import "./App.css";
 import React, { useState } from "react";
 import LoadingBar from "react-top-loading-bar";
-// import { Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import News from "./components/News";
@@ -49,7 +44,6 @@ const App = () => {
   return (
     <>
       <Router>
-        {/* <Navbar mode={mode} toggleMode={toggleMode} title="NewsPanda" /> */}
         <Navbar title="NewsPanda" toggleNews={toggleNews} />
         <LoadingBar color="rgb(170,201,235)" height="3px" progress={progress} />
         <div className="container py-5"></div>

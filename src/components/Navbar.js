@@ -1,20 +1,53 @@
-import React,{useEffect} from "react";
-import Logo from "../Icons/Logo1.png";
-import { Link, useLocation} from "react-router-dom";
+import React, { useEffect } from "react";
+import Logo from "../assets/logos/Logo1.png";
+import { Link, useLocation } from "react-router-dom";
 
-const Navbar = (props) => {
+const Navbar = ({ title }) => {
+  const newsTypes = [
+    {
+      path: "/",
+      name: "Home"
+    },
+    {
+      path: "/sports",
+      name: "Sports"
+    },
+    {
+      path: "/business",
+      name: "Business"
+    },
+    {
+      path: "/entertainment",
+      name: "Entertainment"
+    },
+    {
+      path: "/health",
+      name: "Health"
+    },
+    {
+      path: "/science",
+      name: "Science"
+    },
+    {
+      path: "/technology",
+      name: "Technology"
+    },
+    {
+      path: "/about",
+      name: "About"
+    }
+  ]
+
   const location = useLocation();
-
   useEffect(() => {
-    // console.log(location.pathname)
   }, [location]);
-  
+
   return (
     <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img src={Logo} alt="" />
-          {props.title}
+          {title}
         </Link>
         <button
           className="navbar-toggler"
@@ -30,51 +63,22 @@ const Navbar = (props) => {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/"?"active":""}` } to="/">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/business"?"active":""}` } to="/business">
-                Business
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/entertainment"?"active":""}` } to="/entertainment">
-                Entertainment
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/health"?"active":""}` } to="/health">
-                Health
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/science"?"active":""}` } to="/science">
-                Science
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/sports"?"active":""}` } to="/sports">
-                Sports
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/technology"?"active":""}` } to="/technology">
-                Technology
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname==="/about"?"active":""}` } to="/about">
-                About Us
-              </Link>
-            </li>
+            {
+              newsTypes.map((newsType) => {
+                return (
+                  <li className="nav-item" key={newsType.path}>
+                    <Link className={`nav-link ${location.pathname === newsType.path ? "active" : ""}`} to={newsType.path}>
+                      {newsType.name}
+                    </Link>
+                  </li>
+                )
+              })
+            }
           </ul>
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

@@ -9,7 +9,6 @@ const About = () => {
             <b> About Us</b>
           </div>
           <div className="card-body">
-            {/* <h3 className="card-title py-2">Find More about News Panda here</h3> */}
             <ul style={{ listStyleType: "square" }}>
               <li>
                 <h5>

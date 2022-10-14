@@ -37,7 +37,7 @@ const News = ({ API_KEY, country, pagesize, category, updateProgress }) => {
       setTotalResults(parsedData.totalResults);
       setLoading(false);
     }
-    if (totalResults!==0&& category === "sports") {
+    if (totalResults!==0 && category === "sports") {
       setTotalResults((PrevResult)=>PrevResult-1)
     }
     updateProgress(100);

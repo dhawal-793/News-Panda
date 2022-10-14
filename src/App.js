@@ -1,5 +1,4 @@
-import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoadingBar from "react-top-loading-bar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -8,180 +7,111 @@ import SearchNews from "./components/SearchNews";
 import SearchInput from "./components/SearchInput";
 import About from "./components/About";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+function App() {
 
-const App = () => {
-  const API_KEY = process.env.REACT_APP_NEWS_API;
-  const pageSize = 9;
-  const country = "in";
+  const newstypes = [
+    {
+      key: "general",
+      path: "/",
+      category: "general"
 
-  const [newsType, setNewsType] = useState("top");
-  const [query, setQuery] = useState("");
-  const [queryPath, setQueryPath] = useState("/search");
-  const [progress, setProgress] = useState(0);
-
-  const toggleNews = () => {
-    if (newsType === "top") {
-      setNewsType("all");
-    } else {
-      setNewsType("top");
+    },
+    {
+      key: "sports",
+      path: "/sports",
+      category: "sports"
+    },
+    {
+      key: "business",
+      path: "/business",
+      category: "business"
+    },
+    {
+      key: "entertainment",
+      path: "/entertainment",
+      category: "entertainment"
+    },
+    {
+      key: "health",
+      path: "/health",
+      category: "health"
+    },
+    {
+      key: "science",
+      path: "/science",
+      category: "science"
+    },
+    {
+      key: "technology",
+      path: "/technology",
+      category: "technology"
     }
-  };
-
-  const queryChanged = (event) => {
-    setQuery(event.target.value);
-  };
-
+  ]
+  const API_KEY = process.env.NEWS_PANDA_API;
+  const pageSize = 9;
+  const country = "in";//India
+  const [query, setQuery] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [queryPath, setQueryPath] = useState("")
   const updateProgress = (rprogress) => {
     setProgress(rprogress);
   };
+  useEffect(() => {
+    setQueryPath(`/search/${query}`)
+  }, [query])
 
-  const pathChanged = () => {
-    let text = query.trim().split(/[ ]/);
-    text = text.join(" ");
-    setQueryPath(`/search/${text}`);
-  };
 
   return (
-    <>
-      <Router>
-        <Navbar title="NewsPanda" toggleNews={toggleNews} />
-        <LoadingBar color="rgb(170,201,235)" height="3px" progress={progress} />
-        <div className="container py-5"></div>
-        <SearchInput
-          query={query}
-          queryChanged={queryChanged}
-          queryPath={queryPath}
-          pathChanged={pathChanged}
-        />
-        <Routes>
-          <Route
-            exact
-            path={queryPath}
-            element={
-              <SearchNews
-                API_KEY={API_KEY}
-                updateProgress={updateProgress}
-                key="search"
-                pagesize={pageSize}
-                newsType={newsType}
-                query={query}
-                queryChanged={queryChanged}
-                queryPath={queryPath}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/"
-            element={
-              <News
-                API_KEY={API_KEY}
-                key="general"
-                category="general"
-                updateProgress={updateProgress}
-                country={country}
-                pagesize={pageSize}
-                newsType={newsType}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/sports"
-            element={
-              <News
-                API_KEY={API_KEY}
-                key="sports"
-                category="sports"
-                updateProgress={updateProgress}
-                country={country}
-                pagesize={pageSize}
-                newsType={newsType}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/business"
-            element={
-              <News
-                API_KEY={API_KEY}
-                key="business"
-                category="business"
-                updateProgress={updateProgress}
-                country={country}
-                pagesize={pageSize}
-                newsType={newsType}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/entertainment"
-            element={
-              <News
-                API_KEY={API_KEY}
-                key="entertainment"
-                category="entertainment"
-                updateProgress={updateProgress}
-                country={country}
-                pagesize={pageSize}
-                newsType={newsType}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/health"
-            element={
-              <News
-                API_KEY={API_KEY}
-                key="health"
-                category="health"
-                updateProgress={updateProgress}
-                country={country}
-                pagesize={pageSize}
-                newsType={newsType}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/science"
-            element={
-              <News
-                API_KEY={API_KEY}
-                key="science"
-                category="science"
-                updateProgress={updateProgress}
-                country={country}
-                pagesize={pageSize}
-                newsType={newsType}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/technology"
-            element={
-              <News
-                API_KEY={API_KEY}
-                key="technology"
-                category="technology"
-                updateProgress={updateProgress}
-                country={country}
-                pagesize={pageSize}
-                newsType={newsType}
-              />
-            }
-          />
+    <Router>
+      <Navbar title="NewsPanda" />
+      <LoadingBar color="rgb(170,201,235)" height="3px" progress={progress} />
 
-          <Route exact path="/about" element={<About />} />
-        </Routes>
+      <div className="container py-5"></div>
+      <SearchInput
+        query={query}
+        setQuery={setQuery}
+      />
+      <Routes>
+        <Route
+          exact
+          path={queryPath}
+          key={query}
+          element={
+            <SearchNews
+              API_KEY={API_KEY}
+              key="search"
+              pagesize={pageSize}
+              query={query}
+              setQuery={setQuery}
+              updateProgress={updateProgress}
+            />
+          }
+        />
+
+        {newstypes.map((news) => {
+          return (
+            <Route exact
+              path={news.path}
+              key={news.key}
+              element={
+                <News
+                  API_KEY={API_KEY}
+                  key={news.key}
+                  category={news.category}
+                  country={country}
+                  pageSize={pageSize}
+                  updateProgress={updateProgress}
+                />
+              }
+            />
+          )
+        })}
+
+        <Route exact path="/about" element={<About />} />
+      </Routes>
       <Footer />
-      </Router>
-    </>
+    </Router>
   );
-};
+}
 
 export default App;

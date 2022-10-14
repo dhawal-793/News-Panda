@@ -3,78 +3,77 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import PropTypes from "prop-types";
 import NewsItem from "./NewsItem";
 import Loading from "./Loading";
+import ServerNotFound from "./ServerNotFound";
 
-const News = (props) => {
-  const capitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
+
+const News = ({ API_KEY, country, pagesize, category, updateProgress }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [serverNotFound, setServerNotFound] = useState(false);
-  // const [newsType, setNewsType] = useState(props.newsType);
+
+  
+  
+  const capitalize = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   const loadNews = async () => {
-    props.updateProgress(15);
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.API_KEY}&page=${page}&pagesize=${props.pagesize}`;
-    console.log(url)
+    updateProgress(15);
+    const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${API_KEY}&page=${page}&pagesize=${pagesize}`;
     setLoading(true);
     let data = await fetch(url);
-    props.updateProgress(40);
+    updateProgress(40);
     if (data.status === 429) {
       setTotalResults(0);
       setLoading(false);
       setServerNotFound(true);
-      props.updateProgress(70);
+      updateProgress(70);
     } else {
       let parsedData = await data.json();
-      props.updateProgress(70);
+      updateProgress(70);
       setArticles(parsedData.articles);
       setTotalResults(parsedData.totalResults);
       setLoading(false);
     }
-    console.log(totalResults);
-    props.updateProgress(100);
+    if (totalResults!==0&& category === "sports") {
+      setTotalResults((PrevResult)=>PrevResult-1)
+    }
+    updateProgress(100);
   };
 
   useEffect(() => {
-    document.title = `${capitalize(props.category)} - NewsPanda`;
+    document.title = `${capitalize(category)} - NewsPanda`;
     loadNews();
     // eslint-disable-next-line
   }, []);
 
+
   const fetchMoreData = async () => {
-    const url = `https://newsapi.org/v2/top-headlines?country=${
-      props.country
-    }&category=${props.category}&apiKey=${props.API_KEY}&page=${
-      page + 1
-    }&pagesize=${props.pagesize}`;
-    setPage(page + 1);
+    const url = `https://newsapi.org/v2/top-headlines?country=${country
+      }&category=${category}&apiKey=${API_KEY}&page=${page + 1
+      }&pagesize=${pagesize}`;
+    setPage((prevPage)=>prevPage+1);
     let data = await fetch(url);
     let parsedData = await data.json();
     setArticles(articles.concat(parsedData.articles));
     setTotalResults(parsedData.totalResults);
+    if (totalResults!==0&& category === "sports") {
+      setTotalResults((PrevResult)=>PrevResult-1)
+    }
     setLoading(false);
   };
 
   return (
     <>
-      {serverNotFound === true ? (
-        <div className="container px-3 my-5" style={{ maxWidth: "60vw" }}>
-          <div className="card text-white bg-dark ">
-            <div className="card-header pl-4">#Server Not Found</div>
-            <div className="card-body text-center">
-              <h5 className="card-title ">Opps...</h5>
-              <p className="card-text ">No News Available Right Now,</p>
-              <p className="card-text ">Please try after some time...</p>
-            </div>
-          </div>
-        </div>
+
+      {serverNotFound ? (
+        <ServerNotFound/>
       ) : (
         <div className="container my-8">
           <h2 className="text-center my-4">
-            NewsPanda - Top {capitalize(props.category)} Headlines
+            NewsPanda - Top {capitalize(category)} Headlines
           </h2>
           {loading && <Loading />}
           <InfiniteScroll
@@ -98,7 +97,7 @@ const News = (props) => {
                           newsurl={element.url}
                           author={element.author}
                           sources={element.source.name}
-                          date={element.publishedAt}
+                          date={element.publishedAt} 
                         />
                       </div>
                     );
@@ -110,14 +109,13 @@ const News = (props) => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
 News.defaultProps = {
   country: "in",
-  pagesize: 12,
-  category: "general",
-  newsType: "top",
+  pagesize: 9,
+  category: "general"
 };
 News.propTypes = {
   country: PropTypes.string,
@@ -125,4 +123,4 @@ News.propTypes = {
   category: PropTypes.string,
 };
 
-export default News;
+export default News

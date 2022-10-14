@@ -1,7 +1,7 @@
 import React from "react";
-import Demo_Image from "../Images/Demo_Image.jpg";
+import Demo_Image from "../assets/images/Demo_Image.jpg";
 const NewsItem = (props) => {
-  let { title, description, urlToImage, newsurl, author, date, sources } =
+  const { title, description, urlToImage, newsurl, author, date, sources } =
     props;
   return (
     <div className="container ">
@@ -21,11 +21,7 @@ const NewsItem = (props) => {
         <img
           src={urlToImage ? urlToImage : Demo_Image}
           className="card-img-top"
-          // style={{
-          //   maxHeight: "248.550px",
-          //   minHeight: "198.97px",
-          // }}
-          alt="..."
+          alt="Image Not Available"
         />
         <div className="card-body">
           <h4 className="card-title">{title}</h4>
@@ -34,7 +30,7 @@ const NewsItem = (props) => {
             <small className="text-primary">
               Published by {author ? author : "Unknown"} on{" "}
               {new Date(date).toGMTString()}
-            </small>{" "}
+            </small>
           </p>
           <a
             href={newsurl}

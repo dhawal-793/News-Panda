@@ -47,7 +47,7 @@ function App() {
       category: "technology"
     }
   ]
-  const API_KEY = process.env.NEWS_PANDA_API;
+  const API_KEY = process.env.REACT_APP_NEWS_PANDA_API;
   const pageSize = 9;
   const country = "in";//India
   const [query, setQuery] = useState("");

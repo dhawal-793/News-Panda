@@ -21,7 +21,7 @@ const NewsItem = (props) => {
         <img
           src={urlToImage ? urlToImage : Demo_Image}
           className="card-img-top"
-          alt="Image Not Available"
+          alt="NewsImage Not Available"
         />
         <div className="card-body">
           <h4 className="card-title">{title}</h4>
